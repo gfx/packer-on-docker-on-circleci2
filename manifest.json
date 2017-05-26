@@ -1,0 +1,26 @@
+{
+  "_comment": "Packer on Circle CI 2.0",
+  "variables": {
+  },
+  "builders":[{
+    "type": "docker",
+    "image": "amazonlinux",
+    "commit": true
+  }],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "foo.txt",
+      "destination": "/"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "packer-test",
+        "tag": "latest"
+      }
+    ]
+  ]
+}

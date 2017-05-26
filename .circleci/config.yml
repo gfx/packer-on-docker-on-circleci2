@@ -1,0 +1,41 @@
+# https://circleci.com/docs/2.0/
+version: 2
+jobs:
+  build:
+    docker:
+      - image: amazonlinux:latest
+    working_directory: /home/ubuntu
+    steps:
+      - checkout
+
+      - setup_remote_docker
+
+      - run:
+          name: Install Docker client
+          command: |
+            set -xe
+
+            VER="17.03.1-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+
+      - run:
+          name: Install Packer
+          command: |
+            set -xe
+
+            # Packer
+            yum install -y unzip
+            curl -L -o packer.zip https://releases.hashicorp.com/packer/1.0.0/packer_1.0.0_linux_amd64.zip
+            unzip packer.zip
+            rm packer.zip
+            mv packer /usr/local/bin
+            packer version
+
+      - run:
+          name: Build images
+          command: |
+            set -xe
+
+            packer build manifest.json

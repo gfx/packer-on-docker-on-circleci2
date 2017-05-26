@@ -38,4 +38,4 @@ jobs:
           command: |
             set -xe
 
-            packer build manifest.json
+            PACKER_LOG=1 packer build manifest.json
